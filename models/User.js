@@ -1,4 +1,7 @@
-import { Schema } from "mongoose";
+// import mongoose, { Schema } from "mongoose";
+import mongoose from 'mongoose';
+// import pkg from 'mongoose';
+const { Schema } = mongoose;
 
 /**
  * スキーマ定義
@@ -26,12 +29,12 @@ const UserSchema = new Schema(
         },
         profilePicture: { // プロフィール画像のパス
             type: String,
-            required: true,
+            // required: true,
             default: '', // デフォルト値
         },
         coverPicture: {
             type: String,
-            required: true,
+            // required: true,
             default: '',
         },
         followers: { // フォロワー
@@ -57,3 +60,5 @@ const UserSchema = new Schema(
     },
     { timestamps: true} // 時間格納
 )
+
+export default mongoose.model('User', UserSchema)

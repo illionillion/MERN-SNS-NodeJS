@@ -21,6 +21,7 @@ const app = express();
 const PORT = 3000;
 
 // ミドルウェア
+app.use(express.json())
 app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/posts', postRouter)
@@ -32,4 +33,4 @@ app.get('/', (req, res) => {
 //     res.send('users express')
 // })
 
-app.listen(PORT, () => console.log('サーバー起動：localhost:3000'))
+app.listen(PORT, () => console.log(`サーバー起動：http://localhost:${PORT}`))
