@@ -20,6 +20,22 @@ authRouter.post('/register', async (req, res) => {
     }
 })
 
+// ログイン
+authRouter.post('/login', async (req, res) => {
+    try {
+        const email = req.body.email
+        const user = await User.findOne({ email: email }) // emailでユーザーを探す
+        if(!user) return res.status(404).send('ユーザーが見つかりません。') // ユーザーが見つからなかった場合
+        
+        const vailedPassword = req.body.password === user.password // true or false
+        if(!vailedPassword) return res.status(400).json('パスワードが違います。') // 400 Bad Request (リクエストが正しくない)
+
+        return res.status(200).json(user)
+    } catch (err) {
+        return res.status(500).json(err)
+    }
+})
+
 // userRouter.get('/', (req, res) => {
 //     res.send('user router')
 // })
