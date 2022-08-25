@@ -30,7 +30,7 @@ authRouter.post('/login', async (req, res) => {
         const vailedPassword = req.body.password === user.password // true or false
         if(!vailedPassword) return res.status(400).json('パスワードが違います。') // 400 Bad Request (リクエストが正しくない)
 
-        return res.status(200).json(user)
+        return res.status(200).json(user) // ログインできたらユーザー情報を返す
     } catch (err) {
         return res.status(500).json(err)
     }
