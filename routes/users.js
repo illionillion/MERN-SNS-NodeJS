@@ -11,7 +11,7 @@ userRouter.put('/:id', async (req, res) => {
             const user = await User.findByIdAndUpdate(req.params.id, {
                 $set: req.body // 書き換え
             })
-            res.status(200).json('ユーザー情報の更新が完了しました。')
+            return res.status(200).json('ユーザー情報の更新が完了しました。')
         } catch (err) {
             return res.status(500).json(err)
         }
@@ -24,7 +24,7 @@ userRouter.delete('/:id', async (req, res) => {
     if (req.body.userId === req.params.id || req.body.isAdmin) { // 他のユーザーが操作できないようにする
         try {
             const user = await User.findByIdAndDelete(req.params.id)
-            res.status(200).json('ユーザー情報の削除がされました。')
+            return res.status(200).json('ユーザー情報の削除がされました。')
         } catch (err) {
             return res.status(500).json(err)
         }
@@ -40,7 +40,7 @@ userRouter.get('/:id', async (req, res) => {
         const user = await User.findById(req.params.id)
         // パスワードなどの情報も見られてしまうので取り除く
         const { password, updatedAt, ...other } = user._doc // 分割代入とスプレッド構文 // なぜか._docがいる
-        res.status(200).json(other) // otherを返す
+        return res.status(200).json(other) // otherを返す
     } catch (err) {
         return res.status(500).json(err)
     }

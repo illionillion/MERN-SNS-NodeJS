@@ -14,7 +14,7 @@ authRouter.post('/register', async (req, res) => {
         })
         // セーブ
         const user = await newUser.save()
-        res.status(200).json(user)
+        return res.status(200).json(user)
     } catch (err) {
         return res.status(500).json(err) // 例外時に500番を返す 500はサーバー側のエラー
     }
