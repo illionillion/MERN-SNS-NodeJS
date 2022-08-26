@@ -46,4 +46,44 @@ userRouter.get('/:id', async (req, res) => {
     }
 })
 
+// ユーザーのフォロー
+userRouter.put('/:id/follow', async (req, res) => {
+    // ユーザーをフォローできる条件 // :idが自分意外であること
+    if (req.body.userId !== req.params.id) {
+        try {
+            
+            const user = await User.findById(req.params.id) // フォローするユーザー取得
+            const currentUser = await User.findById(req.body.userId) // 現在のユーザー
+            
+            // フォローするユーザーのフォロワーリストに自分がいたらフォローできない
+            if (user.followers.includes(req.body.userId)) {
+                // 既にフォロー済み
+                return res.status(403).json('あなたは既にこのユーザーをフォローしています。')
+            } 
+
+            // 相手側の更新処理
+            await user.updateOne({ // 一部更新
+                $push: {
+                    followers: req.body.userId // フォロワーの配列に追加
+                }
+            })
+
+            // 自分側の更新処理
+            await currentUser.updateOne({
+                $push: {
+                    followings: req.params.id // 自分のフォローの配列に追加
+                }
+            })
+
+            // 処理完了
+            return res.status(200).json('フォローに成功しました。')
+
+        } catch (err) {
+            return res.status(500).json(err)
+        }
+    } else {
+        return res.status(500).json("自分自身をフォローできません。")
+    }
+})
+
 export default userRouter;
