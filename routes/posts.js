@@ -49,4 +49,14 @@ postRouter.delete('/:id', async (req, res) => { // :id = postId
     }
 })
 
+// 単一の投稿を取得
+postRouter.get('/:id', async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id)
+        return res.status(200).json(post)
+    } catch (err) {
+        return res.status(403).json(err)
+    }
+})
+
 export default postRouter
