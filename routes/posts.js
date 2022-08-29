@@ -8,10 +8,28 @@ postRouter.post('/', async (req, res) => {
     const newPost = new Post(req.body)
     try {
         const savePost = await newPost.save()
-        return res.status(200).json(savePost)
+        return res.status(200).json(savePost) // 投稿できたらその内容を返す
+    } catch (err) {
+        // 型が間違ってたり、入力必須が満たせていないとエラー
+        return res.status(500).json(err)
+    }
+})
+
+// 投稿を更新する
+postRouter.put('/:id', async (req, res) => { // :id = postId
+    try {
+        const post = await Post.findById(req.params.id) // idでpost内容を取得
+        // bodyのユーザーIDと投稿のユーザーIDが等しければ更新できる
+        if (post.userId !== req.body.userId) {
+            return res.status(403).json('あなたは他の人の投稿を編集できません。')
+        }
+        await post.updateOne({
+            $set: req.body,
+        })
+        return res.status(200).json('投稿編集に成功しました。') // 投稿できたらその内容を返す
     } catch (err) {
         // 方が間違ってたり、入力必須が満たせていないとエラー
-        return res.status(500).json(err)
+        return res.status(403).json(err)
     }
 })
 
