@@ -59,4 +59,39 @@ postRouter.get('/:id', async (req, res) => {
     }
 })
 
+// 特定の投稿にいいねを押す
+// ユーザーのフォロー
+postRouter.put('/:id/like', async (req, res) => {
+    // 自分自身の投稿にもいいねできる
+    try {
+        
+        const post = await Post.findById(req.params.id) // いいねする投稿を取得
+        
+        // 投稿にいいねが押されていなかったら、いいねできる
+        if (post.likes.includes(req.body.userId)) {
+            // 既にいいね済みの時がいいねを取り消す
+            await post.updateOne({
+                $pull: {
+                    likes: req.body.userId
+                }
+            })
+            return res.status(200).json('投稿にいいねを外しました。')
+        } 
+
+        // 更新処理
+        await post.updateOne({ // 一部更新
+            $push: {
+                likes: req.body.userId // フォロワーの配列に追加
+            }
+        })
+
+        // 処理完了
+        return res.status(200).json('投稿にいいねしました。')
+
+    } catch (err) {
+        return res.status(500).json(err)
+    }
+    
+})
+
 export default postRouter
