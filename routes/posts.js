@@ -1,5 +1,6 @@
 import express from "express";
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 const postRouter = express.Router()
 
 // 投稿を作成する
@@ -92,6 +93,24 @@ postRouter.put('/:id/like', async (req, res) => {
         return res.status(500).json(err)
     }
     
+})
+
+// タイムラインの投稿を取得
+postRouter.get('/timeline/all', async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.body.userId) // ユーザーの情報を取得
+        const userPosts = await Post.find({ userId: currentUser._id }) // ユーザーの投稿一覧を取得
+        // 自分がフォローしている友達の投稿内容を取得
+        const friendPosts = await Promise.all(
+            currentUser.followings.map((firendId) => { // フォロー一覧をmapで回して一個ずつ投稿を返す
+                return Post.find({ userId: firendId })
+            })
+        )
+        // userPostsとfriendPostsをまとめて返す // concatで結合
+        return res.status(200).json(userPosts.concat(...friendPosts)) // 一つ一つ取り出して結合なのでスプレッド構文
+    } catch (err) {
+        return res.status(500).json(err)
+    }
 })
 
 export default postRouter
