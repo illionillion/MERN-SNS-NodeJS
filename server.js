@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGOURL)
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 
 // ミドルウェア
 app.use(express.json())
