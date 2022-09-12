@@ -96,9 +96,10 @@ postRouter.put('/:id/like', async (req, res) => {
 })
 
 // タイムラインの投稿を取得
-postRouter.get('/timeline/all', async (req, res) => {
+// postRouter.get('/timeline/all', async (req, res) => {
+postRouter.get('/timeline/:userId', async (req, res) => {
     try {
-        const currentUser = await User.findById(req.body.userId) // ユーザーの情報を取得
+        const currentUser = await User.findById(req.params.userId) // ユーザーの情報を取得
         const userPosts = await Post.find({ userId: currentUser._id }) // ユーザーの投稿一覧を取得
         // 自分がフォローしている友達の投稿内容を取得
         const friendPosts = await Promise.all(
