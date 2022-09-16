@@ -95,8 +95,19 @@ postRouter.put('/:id/like', async (req, res) => {
     
 })
 
+// プロフィール専用のタイムライン取得
+postRouter.get('/profile/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({username: req.params.username}) // ユーザーの情報を取得
+        const posts = await Post.find({ userId: user._id }) // ユーザーの投稿一覧を取得
+        // postsとfriendPostsをまとめて返す // concatで結合
+        return res.status(200).json(posts) // 一つ一つ取り出して結合なのでスプレッド構文
+    } catch (err) {
+        return res.status(500).json(err)
+    }
+})
+
 // タイムラインの投稿を取得
-// postRouter.get('/timeline/all', async (req, res) => {
 postRouter.get('/timeline/:userId', async (req, res) => {
     try {
         const currentUser = await User.findById(req.params.userId) // ユーザーの情報を取得
