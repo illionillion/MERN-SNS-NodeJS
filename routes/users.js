@@ -34,10 +34,15 @@ userRouter.delete('/:id', async (req, res) => {
 })
 
 // ユーザー情報の取得
-userRouter.get('/:id', async (req, res) => {
+// userRouter.get('/:id', async (req, res) => {
+// クエリでユーザー情報を取得
+userRouter.get('/', async (req, res) => {
+    const userId = req.query.userId
+    const username = req.query.username
     // 本人かどうかのチェックは必要ない
     try {
-        const user = await User.findById(req.params.id)
+
+        const user = userId ? await User.findById(userId) : await User.findOne({username: username})
         // パスワードなどの情報も見られてしまうので取り除く
         const { password, updatedAt, ...other } = user._doc // 分割代入とスプレッド構文 // なぜか._docがいる
         return res.status(200).json(other) // otherを返す
