@@ -4,6 +4,7 @@ import authRouter from "./routes/auth.js";
 import postRouter from "./routes/posts.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv"
+import uploadRouter from "./routes/upload.js";
 
 dotenv.config() // .env読み込み
 
@@ -25,6 +26,7 @@ app.use(express.json())
 app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/posts', postRouter)
+app.use('/api/upload', uploadRouter)
 
 app.get('/', (req, res) => {
     res.send('hello express')
