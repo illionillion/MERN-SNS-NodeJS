@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
         cb(null, "public/images") // この場所に画像を保存
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname) // 名前？
+        cb(null, req.body.name) // フォーム内の画像ファイル名を取得
     }
 })
 const upload = multer({storage})
